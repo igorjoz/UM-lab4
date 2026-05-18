@@ -8003,6 +8003,7 @@ Przeprowadź i przeanalizuj eksperymenty dla różnych wartości mini-batches, t
 <p><code>batch_size=57</code> (indeks <code>193257</code>) -&gt; też dało dobre wyniki -&gt; minimalnie większy błąd (<code>MSE=0.303</code>).</p>
 <p>SGD (<code>batch_size=1</code>) osiągnął podobny błąd do stabilnych mini-batchy (<code>MSE=0.293</code>), ale potrzebował aż <code>21600</code> aktualizacji.</p>
 <p>Zbyt duże paczki (<code>256</code> i pełny batch <code>7200</code>) rozbiegły się (bardzo duży błąd) przy <code>learning_rate=0.001</code>, więc w tych ustawieniach nie są one dobrym wyborem.</p>
+<p>Rozmiar paczki danych nie ma jednej uniwersalnie najlepszej wartości. W Ex01 batch_size=64 jest najlepszy z testowanych ustawień, ale batch_size=57 jest nadal stabilny. Co ciekawe, w kolejnych zadaniach (Ex04) przy learning_rate=0.007 mniejszy batch_size=10 zbiegał wyraźnie lepiej po tej samej liczbie epok niż batch_size=50 lub 100. Wyniki pokazują, że batch_size trzeba interpretować razem z learning_rate, a nie jako oddzielny parametr.</p>
 </div>
 </div>
 </div>
@@ -8014,7 +8015,7 @@ Przeprowadź i przeanalizuj eksperymenty dla różnych wartości mini-batches, t
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><b>Zadanie 2</b></p>
-Przeprowadź i przeanalizuj eksperymenty dla różnych współczynników uczenia przy ustalonej wartości mini-batches.
+Przeprowadź i przeanalizuj eksperymenty dla różnych współczynników uczenia przy ustalonej wartości mini-batches (liczba mini-batches składająca się z dwóch ostatnich cyfr numeru albumu).
 
 <p>Indeks: <code>193257</code> -&gt; <code>batch_size=57</code>.</p>
 </div>
@@ -8085,19 +8086,9 @@ c:\Users\igor\anaconda3\Lib\site-packages\numpy\_core\_methods.py:134: RuntimeWa
 <p><b>Wnioski do zadania 2</b></p>
 <p>Dla <code>batch_size=57</code> najlepszy z przetestowanych stabilnych wyników dał <code>learning_rate=0.001</code> (<code>MAE=0.439</code>, <code>MSE=0.303</code>).</p>
 <p>Mniejsze wartości learning rate rodzaju 0.0001 i 0.0005 były stabilne. Miały one minimalnie większy błąd.</p>
-<p>Po zwiększeniu współczynnika uczenia do <code>0.002</code> algorytm już się rozbiegł -&gt; bardzo duże <code>MSE</code>. Dla <code>0.005</code> podobnie -&gt; MSE wyniósł <code>inf</code> :).</p>
+<p>Po zwiększeniu współczynnika uczenia do <code>0.002</code> algorytm już się rozbiegł -&gt; bardzo duże <code>MSE</code>. Dla <code>0.005</code> podobnie -&gt; MSE wyniósł <code>inf</code> :)</p>
 <p>Zatem w tych eksperymentach sensownym wyborem jest więc <code>learning_rate=0.001</code>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><img alt="stopka.svg" src="stopka.svg"/></p>
+<p>Współczynnik uczenia decyduje nie tylko o szybkości uczenia, ale też o stabilności. Dla zbyt małych wartości model uczy się wolno i kończy z większym błędem, a dla zbyt dużych wartości pojawia się rozbieżność, bardzo duże błędy albo wartości inf.</p>
 </div>
 </div>
 </div>
