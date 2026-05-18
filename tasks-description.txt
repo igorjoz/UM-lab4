@@ -1,0 +1,11 @@
+Zadania do wykonania:
+
+Notatnik Ex01 (3 pkt) - zadanie 1, zadanie 2 
+
+Notatnik Ex02 (3 pkt) - zadanie 1, zadanie 2
+
+Notatnik Ex03 (2 pkt) - zadanie 1
+
+Notatnik Ex04 (2 pkt) - zadanie 1 
+
+W ramach raportu pracy proszę przesłać sprawozdanie w formacie PDF z przeprowadzonych eksperymentów wraz z utworzonymi kodami i wnioskami.
