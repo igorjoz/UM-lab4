@@ -1,0 +1,101 @@
+ZBIORCZE WNIOSKI Z NOTEBOOKÓW
+=============================
+
+Ex01 - Zadanie 1
+Najlepszy wynik w krótkiej serii uzyskał batch_size=64: MAE=0.434501,
+MSE=0.292776. Batch_size=57, czyli wartość wynikająca z numeru albumu
+193257, też był stabilny, ale dał trochę większy błąd: MSE=0.302666.
+SGD, czyli batch_size=1, osiągnął podobny błąd do stabilnych mini-batchy
+(MSE=0.293177), ale wymagał aż 21600 aktualizacji. Duże paczki, czyli 256
+i pełny batch 7200, rozbiegły się przy learning_rate=0.001, więc w tych
+ustawieniach nie są dobrym wyborem.
+
+Ex01 - Zadanie 2
+Dla batch_size=57 najlepszy z przetestowanych stabilnych wyników dał
+learning_rate=0.001: MAE=0.438995, MSE=0.302666. Mniejsze wartości były
+stabilne, ale miały większy błąd: dla 0.0001 MSE wyniosło 0.324528, a dla
+0.0005 spadło do 0.305041. Po zwiększeniu współczynnika uczenia do 0.002
+algorytm już się rozbiegł (MSE=9.646e+235), a dla 0.005 wynik osiągnął inf.
+W tych eksperymentach sensownym wyborem jest learning_rate=0.001.
+
+Ex02 - Zadanie 1
+Dla danych z przykładu 1 wszystkie sprawdzone kombinacje funkcji straty
+(perceptron, hinge, log_loss) i współczynnika uczenia eta0 od 0.001 do 1.0
+uzyskały accuracy=1.000 na zbiorze testowym. W tym eksperymencie zmiana
+funkcji straty ani eta0 nie zmieniła wyniku klasyfikacji. Wniosek z tych
+konkretnych wyników jest taki, że wygenerowane zbiory są bardzo łatwo
+separowalne liniowo. Przy tak prostych danych badane ustawienia dają ten sam
+końcowy efekt, więc nie widać przewagi jednej funkcji straty nad inną.
+
+Ex02 - Zadanie 2
+Dla klasy pozytywnej 7 najlepszy wynik F1 uzyskała walidacja cv=5:
+F1=0.892587. Ten wariant miał też najwyższą dokładność (accuracy=0.977950)
+i precyzję (precision=0.908295). Dla cv=3 czułość była najwyższa
+(recall=0.890184), ale precyzja była niższa (0.828554), co obniżyło F1 do
+0.858264. Dla cv=10 wynik był pośredni (F1=0.883084). Na podstawie tych
+wyników cv=5 daje najlepszy kompromis między precyzją i czułością.
+
+Ex03 - Zadanie 1
+Najlepszy wynik w eksperymencie uzyskał eta0=0.0001: R2=0.426440,
+MSE=3133.244021 i RMSE=55.975388. Dla eta0=0.001 wynik był bardzo podobny,
+ale nieco słabszy: R2=0.420953, RMSE=56.242515. Zwiększenie eta0 do 0.01
+pogorszyło wynik (R2=0.406415, RMSE=56.944184), a eta0=0.1 dało już bardzo
+słaby model (R2=-1.208685, RMSE=109.843565). Na podstawie tych wyników dla
+tego podziału danych najlepszym wyborem z testowanych wartości jest
+eta0=0.0001.
+
+Ex04 - Zadanie 1
+Najmniejszą końcową stratę uzyskał wariant batch_size=50,
+learning_rate=0.05: final_loss=0.000226, przy parametrach W=0.210525
+i b=0.417037. Bardzo podobny wynik dał batch_size=10, learning_rate=0.007:
+final_loss=0.000313, W=0.231443, b=0.403470. Przy tym samym
+learning_rate=0.007 większy batch_size pogarszał wynik po 30 epokach:
+dla batch_size=10 strata końcowa wyniosła 0.000313, dla 50 już 0.004838,
+a dla 100 0.007822. Z kolei zbyt mały learning_rate=0.001 uczył się wolniej
+(final_loss=0.006312). Na podstawie tych wyników najlepszy z testowanych
+wariantów to batch_size=50 i learning_rate=0.05.
+
+
+ROZSZERZONE WNIOSKI
+===================
+
+1. W kilku zadaniach widać ten sam praktyczny mechanizm: współczynnik uczenia
+   decyduje nie tylko o szybkości uczenia, ale też o stabilności. Dla zbyt
+   małych wartości model uczy się wolno i kończy z większym błędem, a dla zbyt
+   dużych wartości pojawia się rozbieżność, bardzo duże błędy albo wartości
+   inf.
+
+2. Rozmiar paczki danych nie ma jednej uniwersalnie najlepszej wartości. W Ex01
+   batch_size=64 był najlepszy z testowanych ustawień, ale batch_size=57 był
+   nadal stabilny. W Ex04 przy learning_rate=0.007 mniejszy batch_size=10
+   zbiegał wyraźnie lepiej po tej samej liczbie epok niż batch_size=50 lub 100.
+   Wyniki pokazują, że batch_size trzeba interpretować razem z learning_rate,
+   a nie jako oddzielny parametr.
+
+3. Dokładność klasyfikacji bywa myląca, szczególnie przy nierównych klasach.
+   W Ex02 dla cyfry 7 wysokie accuracy występuje we wszystkich wariantach
+   walidacji, ale precision, recall i F1 pokazują różnice między cv=3, cv=5
+   oraz cv=10. Najbardziej sensowna ocena wymaga patrzenia na kilka metryk,
+   zwłaszcza gdy klasa pozytywna jest rzadsza od negatywnej.
+
+4. W Ex02 zadanie 1 wszystkie konfiguracje dały accuracy=1.000, co nie oznacza,
+   że funkcja straty nigdy nie ma znaczenia. Oznacza tylko, że akurat ten
+   syntetyczny zbiór z make_blobs był na tyle łatwo separowalny, że różne
+   ustawienia SGDClassifier poradziły sobie identycznie na zbiorze testowym.
+
+5. W Ex03 wartości R2 około 0.42 wskazują, że liniowy SGDRegressor uchwycił
+   część zależności w danych diabetes, ale predykcja nadal ma duży błąd
+   bezwzględny w skali problemu. To jest realistyczny wynik dla prostego modelu
+   liniowego na tym zbiorze, a nie efekt idealnego dopasowania.
+
+6. W Ex04 poprawne zarejestrowanie wag modelu w Keras jest kluczowe. Po
+   przejściu na aktualną wersję Keras należało użyć poprawnie trenowalnej
+   warstwy/modelu, inaczej strata nie zmieniałaby się wcale. To pokazuje, że
+   zgodność kodu z wersją biblioteki jest elementem poprawności eksperymentu,
+   a nie tylko kwestią techniczną.
+
+7. Najbardziej stabilne i sensowne wyniki w tych zadaniach pochodzą z ustawień,
+   w których błąd maleje, ale parametry nie eksplodują. Dlatego wnioski powinny
+   opierać się na konkretnych wartościach metryk i przebiegach straty, a nie na
+   ogólnym założeniu, że większy learning rate jest zawsze lepszy albo że
+   większy batch_size jest zawsze lepszy.
